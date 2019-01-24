@@ -43,6 +43,29 @@ app.get('/api/alumnos/:dni', function (req, res){
     });
 });
 
+app.get('/api/alumnoscentro/:id_c', function (req, res) {
+    var id_c = req.params.id_c;
+    console.log(id_c);
+    db.select().from("alumnos").where("id_centro",id_c)
+        .then(function (data) {
+            res.json(data);
+        }).catch(function (error) {
+        console.log(error);
+    });
+});
+
+app.get('/api/alumno_tutor/:dni_a/', function (req, res) {
+    var dni_a = req.params.dni_a;
+    console.log(dni_a);
+    /*db.select().from(*/db.select().from("alumnos_has_tutor").where("dni_alumno",dni_a)
+        //)
+        .then(function (data) {
+            res.json(data);
+        }).catch(function (error) {
+        console.log(error);
+    });
+});
+
 app.get('/api/alumnos', function (req, res){
     db.select().from("alumnos").then(function (data) {
     res.json(data);
