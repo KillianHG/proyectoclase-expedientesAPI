@@ -43,6 +43,19 @@ app.get('/api/alumnos/:dni', function (req, res){
     });
 });
 
+//filtro por nombre (en caso de que contenga el parametro)
+app.get('/api/alumnos/filter/:f', function (req, res){
+    var f = req.params.f;
+    console.log(f);
+    db.select().from("alumnos")
+        .where("nombre", "like", "%"+f+"%")
+        .then(function (data) {
+            res.json(data);
+        }).catch(function (error) {
+        console.log(error);
+    });
+});
+
 app.get('/api/alumnoscentro/:id_c', function (req, res) {
     var id_c = req.params.id_c;
     console.log(id_c);
@@ -54,11 +67,14 @@ app.get('/api/alumnoscentro/:id_c', function (req, res) {
     });
 });
 
+//obtener los tutores del alumno del cual hemos pasado el dni
 app.get('/api/alumno_tutor/:dni_a/', function (req, res) {
     var dni_a = req.params.dni_a;
     console.log(dni_a);
-    /*db.select().from(*/db.select().from("alumnos_has_tutor").where("dni_alumno",dni_a)
-        //)
+    db.select("tutor.dni", "tutor.nombre")
+        .from("alumnos_has_tutor")
+        .where("dni_alumno",dni_a)
+        .join("tutor","dni_tutor", "tutor.dni")
         .then(function (data) {
             res.json(data);
         }).catch(function (error) {
